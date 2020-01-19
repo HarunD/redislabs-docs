@@ -1,8 +1,10 @@
 ---
 Title: Developer References
-description: 
+description:
 weight: 80
 alwaysopen: false
+categories: ["RS"]
+aliases: /rs/references/cli-reference/
 ---
 
-{{%children style="h2" description="true"%}}
+{{%allchildren style="h2" description="true"%}}

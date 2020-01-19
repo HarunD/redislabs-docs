@@ -1,8 +1,9 @@
 ---
-Title: Developing Applications with Geo-replicated CRDBs on Redis Enterprise Software (RS)
-description: 
+Title: Developing Applications with Geo-Distributed CRDBs on Redis Enterprise Software (RS)
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 Developing geo-distributed, multi-master applications can be difficult.
 Application developers may have to understand a large number of race
@@ -30,15 +31,15 @@ updates to other participating clusters and other member CRDBs.
 |  ------: | :------: | :------: |
 |  t1 | INCRBY key1 7 |  |
 |  t2 |  | INCRBY key1 3 |
-|  t3 | GET key1 7 | GET key1 3 |
+|  t3 | GET key1<br/>7 | GET key1<br/>3 |
 |  t4 | — Sync — | — Sync — |
-|  t5 | GET key1 10 | GET key1 10 |
+|  t5 | GET key1<br/>10 | GET key1<br/>10 |
 |  t6 | DECRBY key1 3 |  |
 |  t7 |  | INCRBY key1 6 |
 |  t8 | — Sync — | — Sync — |
-|  t9 | GET key1 13 | GET key1 13 |
+|  t9 | GET key1<br/>13 | GET key1<br/>13 |
 
-Databases provide various approaches to address some of these concerns
+Databases provide various approaches to address some of these concerns:
 
 - Active-Passive Geo-distributed deployments: With active-passive
     distributions, all writes go to an active cluster. Redis Enterprise
@@ -79,7 +80,7 @@ Databases provide various approaches to address some of these concerns
 Even though types and commands in CRDBs look identical to standard Redis
 types and commands, the underlying types in RS are enhanced to maintain
 more metadata to create the conflict-free data type experience. This
-section will detail what you need to know about developing with CRDBs on
+section explains what you need to know about developing with CRDBs on
 Redis Enterprise Software.
 
 ## Compatibility
@@ -107,20 +108,22 @@ requirements in CRDBs.
 Below is a table of the primary data types and their support levels,
 followed by descriptions:
 
-|  **Data Type** | **Support Level** |
+| **Data Type** | **Support Level** |
 |------------|-----------------|
-|  Strings | Supported, [see detailed information]({{< relref "/rs/developing/crdbs/strings.md" >}}) |
-|  Integer Counters | Supported, [see detailed information]({{< relref "/rs/developing/crdbs/strings.md#counters" >}}) |
-|  Float Counters | Supported, [see detailed information]({{< relref "/rs/developing/crdbs/strings.md#counters" >}}) |
-|  Sets | Supported, [see detailed information]({{< relref "/rs/developing/crdbs/developing-sets-crdb.md" >}}) |
-|  Hashes | Supported. Hash fields are treated as strings or counters. [See detailed information]({{< relref "/rs/developing/crdbs/developing-hashes-crdb.md" >}}) |
-|  Lists | Supported, [See detailed information]({{< relref "/rs/developing/crdbs/developing-lists-crdb.md" >}}) |
-|  Sorted Sets | Supported, [See detailed information]({{< relref "/rs/developing/crdbs/developing-sorted-sets-crdb.md" >}}) |
-|  Bitsets | Not currently supported |
+| Float Counters | [Supported]({{< relref "/rs/developing/crdbs/strings.md#string-data-type-with-counter-value-in-crdbs" >}}) |
+| Geospatial | [Supported]({{< relref "/rs/developing/crdbs/developing-sorted-sets-crdb.md" >}}) |
+| Hashes | [Supported]({{< relref "/rs/developing/crdbs/developing-hashes-crdb.md" >}}); Hash fields are treated as strings or counters |
+| Integer Counters | [Supported]({{< relref "/rs/developing/crdbs/strings.md#string-data-type-with-counter-value-in-crdbs" >}}) |
+| Lists | [Supported]({{< relref "/rs/developing/crdbs/developing-lists-crdb.md" >}}) |
+| Sets | [Supported]({{< relref "/rs/developing/crdbs/developing-sets-crdb.md" >}}) |
+| Strings | [Supported]({{< relref "/rs/developing/crdbs/strings.md" >}}) |
+| Sorted Sets | [Supported]({{< relref "/rs/developing/crdbs/developing-sorted-sets-crdb.md" >}}) |
+| Bitsets | Not currently supported |
+| Streams | Not currently supported |
 
 ### Other Data Types
 
-Bitmap, Bitfields, Hyperloglog and Geo data types and operations are
+Bitmap, Bitfields, and Hyperloglog data types and operations are
 not currently supported in this version of
 CRDBs.
 
@@ -169,22 +172,33 @@ TTL on key1 to an infinite time.
 
 The replica responsible for the "winning" expire value is also
 responsible to expire the key and propagate a DEL effect when this
-happens. A "losing" replica will from this point on not be responsible
+happens. A "losing" replica is from this point on not responsible
 for expiring the key, unless another EXPIRE command resets the TTL.
-Furthermore, a replica that is NOT the "owner" of the expired value
-will:
+Furthermore, a replica that is NOT the "owner" of the expired value:
 
-- Silently ignore the key if a user attempts to access it in READ
+- Silently ignores the key if a user attempts to access it in READ
     mode, e.g. treating it as if it was expired but not propagating a
     DEL.
-- Expire it (sending a DEL) before making any modifications if a user
+- Expires it (sending a DEL) before making any modifications if a user
     attempts to access it in WRITE mode.
 
-## Out-of-Memory (OOM)
+## Out-of-Memory (OOM) {#outofmemory-oom}
 
 If a member CRDB is in an out of memory situation, that member is marked
 "inconsistent" by RS, the member stops responding to user traffic, and
 the syncer initiates full reconciliation with other peers in the CRDB.
+
+## CRDB Key Counts
+
+Keys are counted differently for CRDBs:
+
+- DBSIZE (in `shard-cli dbsize`) reports key header instances
+    that represent multiple potential values of a key before a replication conflict is resolved.
+- expired_keys (in `bdb-cli info`) can be more than the keys count in DBSIZE (in `shard-cli dbsize`) 
+    because expires are not always removed when a key becomes a tombstone.
+    A tombstone is a key that is logically deleted but still takes memory
+    until it is collected by the garbage collector.
+- The Expires average TTL (in `bdb-cli info`) is computed for local expires only.
 
 ## INFO
 
@@ -211,7 +225,7 @@ troubleshooting information (applicable to support etc.):
 |   | crdt_gc_collected | Number of tombstones garbaged collected successfully. |
 |   | crdt_gc_gvc_min | The minimal globally observed vector clock, as computed locally from all received observed clocks. |
 |   | crdt_stale_released_with_merge | Indicates last stale flag transition was a result of a complete full sync. |
-|  **CRDT Replicas** | A list of crdt_replica<uid> entries, each describes the known state of a remote instance with the following fields: |  |
+|  **CRDT Replicas** | A list of crdt_replica \<uid> entries, each describes the known state of a remote instance with the following fields: |  |
 |   | config_version | Last configuration version reported. |
 |   | shards | Number of shards. |
 |   | slots | Total number of hash slots. |

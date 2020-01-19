@@ -1,9 +1,14 @@
 ---
 Title: Developing with Sorted Sets in a CRDB
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
+{{% note %}}
+[Redis Geospatial (Geo)](https://redis.io/commands/GEOADD) is based on Sorted Sets, so the same CRDB development instructions apply to Geo.
+{{% /note %}}
+
 Similar to Redis Sets, Redis Sorted Sets are non-repeating collections
 of Strings. The difference between the two is that every member of a
 Sorted Set is associated with a score used to order the Sorted Set from
@@ -31,8 +36,6 @@ phases:
 Please see the following examples to get familiar with Sorted Sets'
 behavior in CRDB:
 
- 
-
 Example of Simple Sorted Set with No
 Conflict:
 
@@ -49,12 +52,8 @@ When adding two different elements to a Sorted Set from different
 replicas (in this example, x with score 1.1 was added by Instance 1 to
 Sorted Set Z, and y with score 1.2 was added by Instance 2 to Sorted Set
 Z) in a non-concurrent manner (i.e. each operation happened separately
-and after both instances were in sync), the end result will be a Sorted
+and after both instances were in sync), the end result is a Sorted
 Set including both elements in each CRDB instance.
- 
-
- 
-
 Example of Sorted Set and Concurrent
 Add:
 
@@ -71,10 +70,8 @@ When concurrently adding an element x to a Sorted Set Z by two different
 CRDB instances (Instance 1 added score 1.1 and Instance 2 added score
 2.1), the CRDB implements Last Write Win (LWW) to determine the score of
 x. In this scenario, Instance 2 performed the ZADD operation at time
-t2\>t1 and therefore the CRDB will set the score 2.1 to
+t2\>t1 and therefore the CRDB sets the score 2.1 to
 x.
-
- 
 
 Example of Sorted Set with Concurrent Add Happening at the Exact Same
 Time:
@@ -94,10 +91,6 @@ a 1.1 score and Instance 2 added x with a 2.1 score. After syncing, the
 CRDB realized that both operations happened at the same time and
 resolved the conflict by arbitrarily (but consistently across all CRDB
 instances) giving precedence to Instance 1.
- 
-
- 
-
 Example of Sorted Set with Concurrent Counter
 Increment:
 
@@ -113,8 +106,6 @@ Increment:
 The result is the sum of all
 ZINCRBY
 operations performed by all CRDB instances.
-
- 
 
 Example of Removing an Element from a Sorted
 Set:
@@ -137,4 +128,3 @@ Instance 2 was not affected. Therefore, the ZSCORE operation shows the
 local effect on x. At t7, after both instances were in-sync, the CRDB
 resolved the conflict by subtracting 4.1 (the value of element x in
 Instance 1) from 6.1 (the value of element x in Instance 2).
- 

@@ -1,12 +1,13 @@
 ---
 Title: RLEC 4.2.1-30 Release Notes (October 18, 2015)
-description: 
+description:
 weight: 97
 alwaysopen: false
+categories: ["RS"]
 ---
 If you are upgrading from a previous version, make sure to review the
 [upgrade
-instructions]({{< relref "/rs/administering/installing-upgrading/upgrading.md" >}})
+instructions]({{< relref "/rs/installing-upgrading/upgrading.md" >}})
 before running through the upgrade process.
 
 ## New features
@@ -36,13 +37,13 @@ before running through the upgrade process.
     enhanced to support creating a database that is a replica of
     multiple source databases. For additional details, refer to the
     [Replica
-    of]({{< relref "/rs/administering/intercluster-replication/replica-of.md" >}})
+    of]({{< relref "/rs/administering/active-passive.md" >}})
     section.
 - Cross cluster Replica of - the Replica of feature now supports
     defining a database that is a replica of databases that belong to a
     different RLEC cluster. For additional details, refer to the
     [Replica
-    of]({{< relref "/rs/administering/intercluster-replication/replica-of.md" >}})
+    of]({{< relref "/rs/administering/active-passive.md" >}})
     section.
 - Multi-IP support - on a node that has multiple IPs, enables the
     administrator to specify which IP address is used for internal
@@ -70,7 +71,7 @@ before running through the upgrade process.
     parameter for default answers ("Y") or "-c" for file path parameters
     for custom answers. For additional details, refer to [Accessing and
     installing the setup
-    package]({{< relref "/rs/administering/installing-upgrading/downloading-installing.md" >}})
+    package]({{< relref "/rs/installing-upgrading/downloading-installing.md" >}})
     section.
 - New rladmin command-line-interface "info" command allows for
     fetching current value of tunable parameters.
@@ -80,7 +81,7 @@ before running through the upgrade process.
 - rladmin command-line-interface can only be run under user root or
     redislabs. For additional details, refer to the [rladmin
     command-line
-    interface (CLI)]({{< relref "/rs/references/cli-reference/rladmin.md" >}})
+    interface (CLI)]({{< relref "/rs/references/rladmin.md" >}})
     section.
 - Import / export / backup to/from Amazon S3 requires supplying the
     credentials per usage instance; it does not use central cloud
@@ -137,7 +138,7 @@ before running through the upgrade process.
     used in the endpoint.
 - **Issue**: When upgrading a node to a new RLEC version (refer to
     [Upgrading
-    nodes]({{< relref "/rs/administering/installing-upgrading/upgrading.md" >}})
+    nodes]({{< relref "/rs/installing-upgrading/upgrading.md" >}})
     while the node is in the offline state (refer to [Taking a node
     offline]({{< relref "/rs/administering/cluster-operations/removing-node.md" >}}),
     the upgrade process succeeds but might result in an unstable
@@ -149,22 +150,22 @@ before running through the upgrade process.
     in disk space issues.**Workaround**: On each machine that functions
     as a node in the cluster, create a file named "redislabs", and save
     it in the following location: "/etc/logrotate.d/" (e.g.
-    "/etc/logrotate.d/redislabs").\
-    The file should contain the following text:\
-    /var/opt/redislabs/log/\*.log {\
-    daily\
-    missingok\
-    copytruncate\
-    rotate 7\
-    compress\
-    notifempty\
-    }\
-    The file's permissions should be root:root, 644.\
+    "/etc/logrotate.d/redislabs").
+    The file should contain the following text:
+    /var/opt/redislabs/log/\*.log {
+    daily
+    missingok
+    copytruncate
+    rotate 7
+    compress
+    notifempty
+    }
+    The file's permissions should be root:root, 644.
     Afterwards, from the operating system command line interface (CLI)
-    run the following commands:\
-    yum install policycoreutils-python\
-    semanage fcontext -a -t var_log_t '/var/opt/redislabs/log(/.\*)?'\
-    restsorecon -R /var/opt/redislabs/log\
+    run the following commands:
+    yum install policycoreutils-python
+    semanage fcontext -a -t var_log_t '/var/opt/redislabs/log(/.\*)?'
+    restsorecon -R /var/opt/redislabs/log
 - **Issue**: In the Replica of process, if the target database does
     not have replication enabled and it is restarted or fails for any
     reason, the data on target database might not be in sync with the
@@ -193,5 +194,5 @@ before running through the upgrade process.
     rack-zone awareness compliance.**Workaround**: In the scenario
     described above, you need to manually migrate the shard, through
     rladmin, to a node on a valid rack-zone in order to ensure rack-zone
-    awareness\
+    awareness
     compliance.

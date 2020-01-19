@@ -1,8 +1,9 @@
 ---
 Title: Geo-Distributed Active-Active Redis Applications with Conflict-free Replicated Databases (CRDB)
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 Developing globally distributed applications can be challenging, as
 developers have to think about race conditions and complex combinations
@@ -58,7 +59,7 @@ in between.
 
 [Learn more about
 synchronization]({{< relref "/rs/developing/crdbs/_index.md" >}}) for
-each supported data type and how to develop with them on RES.
+each supported data type and how to develop with them on RS.
 
 ## Terminology
 

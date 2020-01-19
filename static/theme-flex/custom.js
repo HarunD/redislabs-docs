@@ -35,14 +35,6 @@ jQuery('document').ready(function($) {
         $(this).find('.highlight').first().next().removeClass('hovered');
     });
 
-
-	$('.shortcuts li:nth-child(3) a').on('click', function (e) {
-		e.preventDefault();
-        console.log('clicked');
-        $('.search-box').slideToggle(500).toggleClass('active');
-        return false;
-	});
-
 	$('a.close.button').on('click', function (e) {
         e.preventDefault();
         console.log('clicked');
@@ -59,7 +51,7 @@ jQuery('document').ready(function($) {
         e.preventDefault();
 
         $('html, body').stop().animate({
-            scrollTop: $($(this).attr('href')).offset().top + $('body').scrollTop() - 75
+            scrollTop: $($(this).attr('href')).offset().top + $('body').scrollTop()
         }, 620, 'linear');
         return false;
     });
@@ -129,6 +121,10 @@ jQuery('document').ready(function($) {
         }
 
         function MLMenu(el, options) {
+            if(!el) {
+                return;
+            }
+
             this.el = el;
             this.options = extend( {}, this.options );
             extend( this.options, options );
@@ -143,7 +139,7 @@ jQuery('document').ready(function($) {
             /* Determine what current menu actually is */
             var current_menu;
             this.menus.forEach(function(menuEl, pos) {
-                var items = menuEl.querySelectorAll('.menu__item');
+                var items = Array.from(menuEl.querySelectorAll('.menu__item'));
                 items.forEach(function(itemEl, iPos) {
                     var currentLink = itemEl.querySelector('.menu__link--current');
                     if (currentLink) {
@@ -196,7 +192,7 @@ jQuery('document').ready(function($) {
                 }
 
                 var menu_x = menuEl.getAttribute('data-menu');
-                var links = menuEl.querySelectorAll('.menu__link');
+                var links = Array.from(menuEl.querySelectorAll('.menu__link'));
                 links.forEach(function(linkEl, lPos) {
                     var submenu = linkEl.getAttribute('data-submenu');
                     if (submenu) {

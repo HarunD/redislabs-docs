@@ -1,13 +1,14 @@
 ---
 Title: Developing with Strings in a CRDB
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 Strings have particular unique characteristics in a CRDB. First off,
 they are the only data type that Last Write Wins (LWW) applies to. As
 part of that, a wall-clock timestamp (OS Time) is in the metadata of any
-operation on a String. If RP cannot determine the order of operations,
+operation on a String. If RS cannot determine the order of operations,
 the value with the higher timestamp wins. This is the only case where OS
 time is used to resolve a conflict.
 
@@ -55,7 +56,7 @@ value*
 ### String Data Type with Counter Value in CRDBs
 
 While traditional Redis does not have an explicit counter type, Redis
-Enterprise Pack's CRDBs does. Counters can be used to implement
+Enterprise Software's CRDBs does. Counters can be used to implement
 distributed counters. This can be useful when counting total views of an
 article or image, or when counting social interactions like "retweets"
 or "likes" of an article in a CRDB distributed to multiple geographies.

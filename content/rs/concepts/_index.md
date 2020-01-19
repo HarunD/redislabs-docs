@@ -1,14 +1,15 @@
 ---
 Title: Concepts and Architecture
-description: 
+description:
 weight: 40
 alwaysopen: false
+categories: ["RS"]
 ---
 A Redis Enterprise cluster is composed of identical nodes that are
 deployed within a data center or stretched across local availability
 zones. Redis Enterprise architecture is made up of a management path
-(depicted in the blue layer in Figure 1 below) and data access path
-(depicted in the red layer in Figure 1 below).
+(shown in the blue layer in Figure 1 below) and data access path
+(shown in the red layer in Figure 1 below).
 
 - Management path includes the cluster manager, proxy and secure REST
     API/UI for programmatic administration. In short, cluster manager is
@@ -23,7 +24,7 @@ zones. Redis Enterprise architecture is made up of a management path
 ![Redis Enterprise
 Stack](/images/rs/rp_stack.png?width=700&height=319)
 
-*Figure 1*\
+*Figure 1*
 *Redis Enterprise Nodes with blue layer representing the management path
 and red tiles representing the data access path with Redis as the
 shards.*
@@ -60,7 +61,7 @@ latencies. Resharding is performed without downtime.
 
 ![Sharding diagram](/images/rs/sharding.png?width=700&height=406)
 
-*Figure 2*\
+*Figure 2*
 *Redis Enterprise places master (M) and slave (S) replicas in separate
 nodes, racks and zones and use in-memory replication to protect data
 against failures.*
@@ -98,8 +99,8 @@ Redis Enterprise has two durability options:
     writes. This means under an unplanned interruption, it is more
     likely that your replica is more up to date as compared to your
     durable copy on disk. To take full advantage of the
-    replicated-durability, Redis provides the WAIT command. WAIT ensures
-    that a write can wait for acknowledgment until multiple replicas
-    confirm that write. This ensures a write confirmed with WAIT on
-    replicas will be durable even if a node catches on fire and never
+    replicated-durability, Redis provides the WAIT command. WAIT makes sure that
+    a write can wait for acknowledgment until multiple replicas
+    confirm that write. This makes sure that a write confirmed with WAIT on
+    replicas are durable even if a node catches on fire and never
     comes back to the cluster.

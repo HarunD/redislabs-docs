@@ -1,8 +1,9 @@
 ---
 Title: Database metrics
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 You can choose which metrics are shown in each of the two detailed
 graphs at the top of the page, as follows:

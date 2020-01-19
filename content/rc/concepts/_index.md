@@ -1,10 +1,12 @@
 ---
-Title: Concepts behind Redis Enterprise Cloud
-description: 
-weight: 20
+Title: Concepts
+description:
+weight: 30
 alwaysopen: false
+categories: ["RC"]
+aliases: /rv/concepts/
 ---
 This section of pages contains content that describes the main concepts
-and architecture that you need to know about for Redis Enterprise Cloud.
+that Redis Cloud is built around.
 
-{{%children style="h2" description="true"%}}
+{{%allchildren style="h2" description="true"%}}

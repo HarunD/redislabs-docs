@@ -1,137 +1,206 @@
 ---
-Title: Create a Geo-Replicated Conflict-free Replicated Database (CRDB)
-description: 
+Title: Create a Geo-Distributed Conflict-free Replicated Database (CRDB)
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
-CRDBs span multiple Redis Enterprise Software (RS) clusters. Overview of
-the steps to create a CRDB:
+[Conflict-Free Replicated Databases]({{< relref "/rs/administering/active-active.md" >}}) (CRDBs) let you create replicated instances of your data between Redis Enterprise Software (RS) clusters.
+The participating clusters that host the instances can be in [distributed geographic locations]({{< relref "/rs/concepts/intercluster-replication.md" >}}).
+Every instance of a CRDB can receive write operations, and all operations are [synchronized]({{< relref "/rs/concepts/intercluster-replication.md#example-of-synchronization" >}}) to all of the instances.
 
-1. Create a service account on each cluster as an admin
-1. Confirm network is setup
-1. Connect to one of your clusters and configure a new CRDB
-1. Test writing to one cluster
-1. Test reading from a different cluster
+## Steps to Create a CRDB
+
+1. **Create a service account** - On each participating cluster, create a dedicated user account with the Admin role.
+1. **Confirm connectivity** - Confirm network connectivity between the participating clusters.
+1. **Create CRDB** - Connect to one of your clusters and create a new CRDB.
+1. **Add participating clusters** - Add the participating clusters to the CRDB with the user credentials for the service account.
+1. **Confirm CRDB Synchronization** - Test writing to one cluster and reading from a different cluster.
 
 ## Prerequisites
 
-- Two or more Redis Enterprise Software clusters running version 5.0,
-    each with minimum of two nodes
-- Networking and cluster FQDN name resolution between all clusters
-- Confirm that a network time service listener (e.g. ntpd) is
-    configured and running on each node in all clusters. Please see
-    "Network Time Service" for more information.
+- Two or more machines with the same version of RS installed
+- Network connectivity and cluster FQDN name resolution between all participating clusters
+- [Network time service]({{< relref "/rs/administering/active-active.md#network-time-service-ntp-or-chrony" >}}) listener (ntpd) configured and running on each node in all clusters
 
-## Create a Service Account
+## Creating a CRDB
 
-A local account with the Admin role is highly recommended on each
-cluster that will host a CRDB. While you could use a user account, it is
-recommended to have a separate admin account (known as a "service
-account") that will only used by the clusters to connect between
-clusters when orchestration is necessary. To do this, go to **settings
--\> team** and click the plus icon on the lower left to add an account.
+1. To create service accounts, on each participating cluster:
 
-![Service Account
-Creation](/images/rs/image8.png?width=1000&height=490)
+    1. In your web browser, open the web UI of the cluster that you want to connect to in order to create the CRDB.
+        By default, the address is: `https://<RS_address>:8443`
+    1. Go to **settings > team** and click ![Add](/images/rs/icon_add.png#no-click "Add").
+    1. Enter the name, email, and password for the user, select the **Admin** role, and click ![Save](/images/rs/icon_save.png#no-click "Save").
 
-This service account will be used when the CRDB is created, but also on
-an ongoing basis by the clusters to help manage the CRDB.
+    ![Service Account Creation](/images/rs/create-service-account.png)
 
-## Confirm network is setup
+1. To make sure that there is network connectivity between the participating clusters,
+    telnet on port 9443 from each participating cluster to each of the other participating clusters.
 
-The CRDB creation process assumes the required secured network
-configurations are in place. If you have not already done so, please see
-Network Configurations. If the configurations are set up, let's confirm
-the connectivity we need. First, we need to check that the necessary
-ports are open from each cluster node to the proxy and admin ports on
-the other clusters that are to host the CRDB. This test should be done
-from every node in each Participating Cluster to each node in the other
-Participating Clusters.
+    ```src
+    telnet <target FQDN> 9443
+    ```
 
-```src
-$ telnet <target FQDN> 8080
-```
+1. In your web browser, open the web UI of the cluster that you want to connect to in order to create the CRDB.
+    By default, the address is: `https://<RS_address>:8443`
 
-## Create a CRDB
+1. In **databases**, click ![Add](/images/rs/icon_add.png#no-click "Add").
 
-Direct your browser to the web UI of one of the RS clusters that will
-host the CRDB. Under the databases tab, choose the Redis database with
-Deployment type set to Geo-Distributed.
+    If you do not have any databases on the node, you are prompted to create a database.
 
-![new_geo-distrbuted](/images/rs/new_geo-distrbuted.png?width=600&height=608)
+1. In the **Deployment** box, select **Geo-Distributed** and click **Next** to create a CRDB on RAM.
 
-On the create database page, click the **show advanced option** link.
-There are some key differences in the creation process between CRDBs and
-standard Redis database creation.
+    If your cluster supports [Redis on Flash]({{< relref "/rs/concepts/memory-architecture/redis-flash.md" >}}),
+    in **Runs on** you can select **Flash** so that your database uses Flash memory. We recommend that you use AOF every 1 sec
+    for the best performance during the initial CRDB sync of a new replica.
 
-1. Intra-cluster Replication is required for each Participating Cluster
-    to be included in a CRDB. This is due to how the intercluster
-    replication process, called syncer, always reads off slaves and not
-    masters. Therefore slaves must exist. In the interface, you will see
-    that you cannot change this option and if not possible, the creation
-    will error.
-1. The eviction policy can only be set to noeviction for CRDBs.
-1. [Participating Clusters](#part-clusters) section is where you define
-    the clusters that will host member CRDBs and the admin user account
-    to connect to each cluster.
+    ![new_geo-distrbuted](/images/rs/new_geo-distrbuted.png?width=600&height=608)
 
-    Note: Be sure you add the cluster you are currently on as a
-    participating cluster!
+1. Enter the name of the new CRDB and select from the options:
 
-## Participating Clusters
+    {{% note %}}
 
-A CRDB is a global database made up of separate databases spanning
-multiple clusters, when creating a new CRDB you must configure which
-clusters are to host members of the CRDB. On the **Participating
-Clusters** list, add two or more clusters using the **+** icon. For each
-cluster, use the service account and password created earlier for the
-admin account. Make sure to use port 8080 for this configuration, then
-click Activate to create your new Conflict-Free Replicated Database.
+- The eviction policy can only be set to **noeviction** for CRDBs.
+- You cannot enable or disable database clustering after the CRDB is created.
 
-![](https://lh6.googleusercontent.com/BpQBxYWXeuTuPCqL0TQKRRJaQlr8jLIMoNnScsD2s0wRzDkTc9kgWwngjQ6PnJff_hF1Ca98aZkJTJzU5Sk5rCJwZmR2egkImQCJyMm9E9WfJDrtlzHUJQFAi05lx395EEOZvi3D)
+    {{% /note %}}
 
-**Causal Consistency**
+    - **Replication** - We recommend that you use intra-cluster replication to create slave shards in each CRDB instance.
+        The intercluster synchronization is most efficient when it reads from slave shards.
+    - [**Data persistence**]({{< relref "/rs/concepts/data-access/persistence.md" >}}) -
+        To protect against loss of data stored in RAM,
+        you can enable data persistence and select to store a copy of the data on disk with snapshots or Append Only File (AOF).
+        AOF provides the fastest and most reliable method for instance failure recovery.
 
-[Causal Consistency in a
-CRDB) guarantees
-that the order of operations on a specific key is maintained across all
-CRDB instances. You can enable Causal
-Consistency during the CRDB creation process. If you have an existing
-CRDB and would like to enable Causal Consistency, use the
-REST API or the crdb-cli
-tool.
+    - **Redis password** - A password that clients must use to connect to the CRDB.
+    - **Endpoint port number** (Required) - The port in the range 10000-19999 that clients must use to connect to the CRDB.
+    - In the **Database clustering** option, you can either:
+<!-- Also in crdbs.md -->
+        - Make sure the Database clustering is enabled and select the number of shards
+        that you want to have in the database. When database clustering is enabled,
+        databases are subject to limitations on [Multi-key commands]({{< relref "/rs/concepts/high-availability/clustering.md" >}}).
+        You can increase the number of shards in the database at any time.
+        - Clear the **Database clustering** option to use only one shard so that you
+        can use [Multi-key commands]({{< relref "/rs/concepts/high-availability/clustering.md" >}})
+        without the limitations.
+    - **Eviction policy** - The eviction policy for CRDBs is `noeviction`.
+    - **Participating Clusters** - You must specify the URL of the clusters that you want to
+        host CRDB instances and the admin user account to connect to each cluster.
+        1. In the **Participating Clusters** list, click ![Add](/images/rs/icon_add.png#no-click "Add") to add clusters.
+        1. For each cluster, enter the URL for the cluster (`https://<cluster_fqdn_or_ip_address>:9443`),
+            enter the credentials (email address and password) for the service account that you created, and click ![Save](/images/rs/icon_save.png#no-click "Save").
+    - **Causal Consistency** - Causal Consistency in a CRDB guarantees that the order of operations on a
+        specific key is maintained across all CRDB instances. To enable Causal Consistency for an existing
+        CRDB, use the REST API.
+    - **TLS** - You can enable TLS for communications between
+        Participating Clusters. After you create the CRDB, you can enable SSL for the data
+        access operations from applications just like regular Redis Enterprise databases.
 
-**SSL Authentication**
+        SSL for data access operations is a local setting on each
+        cluster that only impacts the specific CRDB instance you are editing and
+        does not apply automatically to all CRDB instances.
 
-When creating a new CRDB, you can enable SSL for the bi-directional
-replication established between all participating clusters. SSL mode for
-bidirectional replication is a global setting that applies to all
-replication traffic that is between all Participating Clusters. SSL
-Authentication is only available as an option at the time of creating
-CRDBs. It is not an option that can be updated later. If you have an
-existing CRDB and would like to use SSL, you need to create a new CRDB
-and migrate your data over.
+<!-- Also in getting-started-crdbs.md -->
+## Test the Connection to your Member Redis CRDBs
 
-[At creation time, SSL can only be enabled for communications between
-Participating Clusters. After creating the CRDB instances on each
-Participating Cluster, you can individually enable SSL also for the data
-access operations from applications just
-like regular Redis Enterprise
-databases).
-Enabling SSL for data access operation is a
-**local setting** on each cluster that only
-impacts the specific CRDB instance you are editing and is not a global
-setting for all CRDB instances.
+With the Redis database created, you are ready to connect to your
+database to store data. You can use one of the following ways to test
+connectivity to your database:
 
-![](https://lh3.googleusercontent.com/qi-Bj63e_Oh642cg5T_fHiN6GLWHBqeBJN-y87-OqNrAH6h_Y6xYgKV7tr1jiPA33clXQlAlAMjetwCFm4Pg_CFEP1Qi7IvPKyF56QnVXBa7e8j0Mx3GzXL4hE_U1I1sN6xkNdNk)
+- Connect with redis-cli, the built-in command-line tool
+- Connect with a _Hello World_ application written in Python
 
-Once activated, the Redis Enterprise Software cluster will authenticate
-and communicate with each of the listed Participating Clusters on your
-behalf via Rest API and the service account. RS will create a member
-database on each cluster, join it to the CRDB, and commence replication.
-If you view any Participating Cluster individually, you should see the
-new database created as a member of the CRDB.
+Remember we have two member CRDBs that are available for connections and
+concurrent reads and writes. The member CRDBs are using bi-directional
+replication to for the global CRDB.
 
-If you would like to a smoke test of connectivity and replication, see
-the connecting section of [the CRDB Quick
-Start]({{< relref "/rs/getting-started/creating-database/crdbs.md#test-connectivity" >}}).
+![crdb-diagram](/images/rs/crdb-diagram.png)
+
+### Connecting Using redis-cli {#connecting-using-rediscli}
+
+redis-cli is a simple command-line tool to interact with redis database.
+
+1. To use redis-cli on port 12000 from the node 1 terminal, run:
+
+    ```src
+    redis-cli -p 12000
+    ```
+
+1. Store and retrieve a key in the database to test the connection with these
+    commands:
+
+    - `set key1 123`
+    - `get key1`
+
+    The output of the command looks like this:
+
+    ```src
+    127.0.0.1:12000> set key1 123
+    OK
+    127.0.0.1:12000> get key1
+    "123"
+    ```
+
+1. Enter the terminal of node 1 in cluster 2, run the redis-cli, and
+   retrieve key1.
+
+    The output of the commands looks like this:
+
+    ```src
+    $ redis-cli -p 12000
+    127.0.0.1:12000> get key1
+    "123"
+    ```
+
+### Connecting Using _Hello World_ Application in Python
+
+A simple python application running on the host machine can also connect
+to the database.
+
+Note: Before you continue, you must have python and
+[redis-py](https://github.com/andymccurdy/redis-py#installation)
+(python library for connecting to Redis) configured on the host machine
+running the container.
+
+1. In the command-line terminal, create a new file called "redis_test.py"
+
+    ```src
+    vi redis_test.py
+    ```
+
+1. Paste this code into the "redis_test.py" file.
+
+    This application stores a value in key1 in cluster 1, gets that value from
+    key1 in cluster 1, and gets the value from key1 in cluster 2.
+
+    ```py
+    import redis
+
+    rp1 = redis.StrictRedis(host='localhost', port=12000, db=0)
+    rp2 = redis.StrictRedis(host='localhost', port=12002, db=0)
+
+    print ("set key1 123 in cluster 1")
+    print (rp1.set('key1', '123'))
+    print ("get key1 cluster 1")
+    print (rp1.get('key1'))
+
+    print ("get key1 from cluster 2")
+    print (rp2.get('key1'))
+    ```
+
+1. To run the "redis_test.py" application, run:
+
+    ```src
+    python redis_test.py
+    ```
+
+    If the connection is successful, the output of the application looks like:
+
+    ```src
+    set key1 123 in cluster 1
+    True
+    get key1 cluster 1
+    b'123'
+    get key1 from cluster 2
+    b'123'
+    ```

@@ -1,8 +1,9 @@
 ---
 Title: Designing for Production
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 The information in the section discusses important topics you need to
 know about when designing your Redis Enterprise Software cluster for a

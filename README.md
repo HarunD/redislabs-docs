@@ -2,7 +2,7 @@ _The master branch_ => [![CircleCI](https://circleci.com/gh/RedisLabs/redislabs-
 
 # Redis Labs Documentation Center
 
-The Redis Labs Documentation Center is built with [Hugo]( https://gohugo.io/ ) and is based on the [DocDock]( https://github.com/vjeantet/hugo-theme-docdock.git ) theme.
+The Redis Labs Documentation Center is built with [Hugo]( https://gohugo.io/ ) version 0.48 and is based on the [DocDock]( https://github.com/vjeantet/hugo-theme-docdock.git ) theme.
 
 ## Installing the Redis Labs Documentation Center
 
@@ -39,11 +39,11 @@ To access the site, go to: http://localhost:1313
 
 ## Publishing
 
-Official version documentation is published through the version build branches (for example latest-build).
+The latest branch is the latest stable version of documentation for the latest publicly available release at: https://docs.redislabs.com/latest
+
+Documentation for previous versions is published through the version build branches (for example 5.2-build).
 
 The master branch is published to https://docs.redislabs.com/staging/dev and represents the unstable version of documentation for the latest publicly available release. When stable, this branch is published to the latest branch.
-
-The latest branch is the latest stable version of documentation for the latest publicly available release at: https://docs.redislabs.com/latest
 
 ## Contributing to the documentation
 
@@ -64,4 +64,4 @@ To add a new section in the sidebar, you must add a directory and add an `_index
 
 ## Markdown
 
-For more information about markdown syntax for our docs, see the [cheatsheet](http://www.redislabs.com/docs/latest/cheatsheet).
+For more information about markdown syntax for our docs, see the [cheatsheet](https://docs.redislabs.com/latest/cheatsheet).

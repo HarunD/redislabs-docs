@@ -1,8 +1,9 @@
 ---
-Title: Testing client connectivity
+Title: Testing Client Connectivity
 description: 
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 In various scenarios, such as after creating a new cluster or upgrading
 the cluster, it is highly advisable to verify client connectivity to the
@@ -20,7 +21,7 @@ To test client connectivity:
     endpoint by using the IP address rather than the FQDN; if you
     succeed, it means that the DNS is not properly configured. For
     additional details, refer to
-    [DNS]({{< relref "/rs/administering/installing-upgrading/configuring/cluster-name-dns-connection-management/_index.md" >}}).
+    [DNS]({{< relref "/rs/installing-upgrading/configuring/cluster-name-dns-connection-management/_index.md" >}}).
 
 If any issues are encountered during the connectivity test, contact our
 support at <support@redislabs.com>.
@@ -59,13 +60,13 @@ redis-py on the [github page for
 redis-py](https://github.com/andymccurdy/redis-py).
 
 In the command-line Terminal, create a new file called
-"**redis_test.py**"
+**redis_test.py**
 
 ```src
-$ vi redis_test.py
+vi redis_test.py
 ```
 
-Paste the following into a file named "**redis_test.py**".
+Paste the following into a file named **redis_test.py**.
 
 ```src
 import redis
@@ -81,7 +82,7 @@ Run "redis_test.py" application to connect to the database and store
 and retrieve a key using the command-line.
 
 ```src
-$ python redis_test.py
+python redis_test.py
 ```
 
 The output should look like the following screen if the connection is

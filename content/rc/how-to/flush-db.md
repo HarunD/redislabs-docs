@@ -1,37 +1,30 @@
 ---
-Title: Using flushall Command on Redis Enterprise Cloud
-description: 
+Title: Flushing Databases
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RC"]
 ---
-There are times where you want to delete all database data. In previous
-versions of Redis Enterprise Cloud, there was a button to perform this
-for you in the web UI. As more and more people use Redis Enterprise
-Cloud for their authoritative database, keeping that data safe is even
-more critical. So this operation was removed from the web UI so people
-did not accidentally hit it.
+There are times where you want to delete all database data.
 
-### flushall for Redis Enterprise Cloud Databases
+{{% warning title="Data Loss Warning" %}}
+The flush command deletes ALL of the data in the database.
+This includes all data in memory and persisted to disk.
+We recommend that you [backup your database]({{< relref "/rc/administration/configuration/backups.md" >}}) before you flush the data.
+{{% /warning %}}
 
-If you would still like to perform this operation on your database, you
-can, but it is from the command line using the redis-cli command or from
-your favorite Redis client.
+## flushall for Redis Cloud Databases
 
-Here is how to do it using redis-cli:
+You can flush a database from the command line with the redis-cli command or with your Redis client.
+
+To flush database data from the redis-cli, run:
 
 ```src
-$ redis-cli -h <hostname> -p <portnumber> -a <password> flushall
+redis-cli -h <hostname> -p <portnumber> -a <password> flushall
 ```
 
 Example:
 
 ```src
-$ redis-cli -h redis-12345.c24.us-east-mz-1.ec2.cloud.redislabs.com -p 12345 -a xyz flushall
+redis-cli -h redis-12345.c24.us-east-mz-1.ec2.cloud.redislabs.com -p 12345 -a xyz flushall
 ```
-
-Remember that this will delete ALL of the data in the database. This
-includes all data in memory and persisted to disk. So before doing
-flushall, it is best practice to [backup your
-database]({{< relref "/rc/administration/configure/backups.md" >}}) first.
-
-### 

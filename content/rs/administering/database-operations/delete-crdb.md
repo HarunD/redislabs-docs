@@ -1,8 +1,9 @@
 ---
 Title: Deleting a Conflict-free Replicated Database (CRDB)
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 Deleting a CRDB is a nearly identical procedure to standard Redis
 databases in Redis Enterprise Software, but with a critical distinction.

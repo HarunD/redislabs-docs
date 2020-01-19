@@ -1,8 +1,9 @@
 ---
 Title: Replacing a node
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 If a node in your cluster is faulty, its status appears as **Down **in
 the **Status** column of the **Nodes** page, and in the **Cluster \>
@@ -15,7 +16,7 @@ failure](/images/rs/node-failure.png?width=600&height=152)
 
 1. Acquire a new node that is identical to the old node, install and
     configure Redis Enterprise Software on it per the [install
-    instructions]({{< relref "/rs/administering/installing-upgrading/downloading-installing.md" >}}).
+    instructions]({{< relref "/rs/installing-upgrading/downloading-installing.md" >}}).
 
     Note: If you are using [Redis on
     Flash]({{< relref "/rs/concepts/memory-architecture/redis-flash.md" >}}), you must
@@ -26,18 +27,16 @@ failure](/images/rs/node-failure.png?width=600&height=152)
 1. Make sure the new node has as much available memory as the faulty
     node.
 1. A message appears, informing you that the cluster has a faulty node
-    and that the new node will replace the faulty node.
+    and that the new node replaces the faulty node.
 1. If the new node has insufficient memory, you are prompted to add a
     different node - one with sufficient memory.
 
 **Note**: If there is a faulty node in the cluster to which you are
-adding a node, RP will enforce using the new node to replace the faulty
+adding a node, RS enforces using the new node to replace the faulty
 one.
-
- 
 
 **Note**: If you are using the DNS NS record based connection approach,
 the DNS records must be updated each time a node is added or replaced.
 For additional details, For more information, refer to the [connection
 management
-page]({{< relref "/rs/administering/installing-upgrading/configuring/cluster-name-dns-connection-management/_index.md" >}}).
+page]({{< relref "/rs/installing-upgrading/configuring/cluster-name-dns-connection-management/_index.md" >}}).

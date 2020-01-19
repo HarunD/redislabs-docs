@@ -1,8 +1,9 @@
 ---
 Title: Redis Enterprise Software 5.0.2 (2018 March)
-description: 
+description:
 weight: 92
 alwaysopen: false
+categories: ["RS"]
 ---
 Redis Enterprise Software 5.0.2 is now available. Key features include
 functional and performance updates for CRDB, changes to module
@@ -36,7 +37,7 @@ page
 
 - Redis Enterprise Modules are installed with Redis Enterprise
     Software by default
-- ReBloom and RediSearch Enterprise have been updated to newer
+- RedisBloom and RediSearch Enterprise have been updated to newer
     versions
 
 ### Other

@@ -1,12 +1,13 @@
 ---
 Title: Troubleshooting
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 This section includes various troubleshooting tips and tricks for Redis
-Enterprise Software (RES).
+Enterprise Software (RS).
 
 Topics:
 
-{{%children style="h2" description="true"%}}
+{{%allchildren style="h2" description="true"%}}

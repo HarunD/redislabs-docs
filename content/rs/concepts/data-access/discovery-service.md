@@ -1,8 +1,9 @@
 ---
 Title: Discovery Service
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 The Discovery Service provides an IP-based connection management service
 used when connecting to Redis Enterprise Software databases. When used
@@ -34,7 +35,7 @@ database.
 
 The Discovery Service can return either the internal or external
 endpoint for a database. If you query the discovery service for the
-endpoint of a database named "db1", the Discovery Service will return
+endpoint of a database named "db1", the Discovery Service returns
 the external endpoint information by default. If only an internal
 endpoint exists with no external endpoint the default behavior is to
 return the internal endpoint. The "\@internal" is added to the end of
@@ -79,7 +80,7 @@ protocol that are not applicable or would be duplication with existing
 technology in Redis Enterprise Software. The Discovery Service
 implements only the parts required to provide applications with easy
 High Availability, be compatible with the protocol, and not rely on DNS
-to derive which node in the cluster to communicate with.\
+to derive which node in the cluster to communicate with.
 
 ## Redis client support
 

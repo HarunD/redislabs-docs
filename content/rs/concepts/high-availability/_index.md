@@ -1,7 +1,8 @@
 ---
 Title: High Availability
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
-{{%children style="h2" description="true"%}}
+{{%allchildren style="h2" description="true"%}}

@@ -1,8 +1,9 @@
 ---
 Title: Redis Enterprise Pack 5.0 Release Notes (November 2017)
-description: 
+description:
 weight: 93
 alwaysopen: false
+categories: ["RS"]
 ---
 Redis Enterprise Software 5.0 is now available. Key features include
 Geo-Distributed Active-Active Conflict-free Replicated Databases (CRDB),
@@ -29,9 +30,9 @@ on. The result is that for all but the initial call to get the cluster
 topology or reacquire the location of the master shard, the client will
 connect to the RS endpoint proxy where the master shard is located.
 [Learn more about the Cluster API
-implementation]({{< relref "/rs/concepts/data-access/cluster-api.md" >}}).
+implementation]({{< relref "/rs/concepts/data-access/oss-cluster-api.md" >}}).
 
-### Geo-Distributed Active-Active Conflict-free Replicated Databases (CRDB)
+### Geo-Distributed Active-Active Conflict-free Replicated Databases (CRDB) {#geodistributed-activeactive-conflictfree-replicated-databases-crdb}
 
 Developing globally distributed applications can be challenging, as
 developers have to think about race conditions and complex combinations
@@ -60,30 +61,30 @@ Enterprise is known for.
 There are three modules Redis Labs has developed and certified with
 Redis Enterprise Pack (RS). The modules are:
 
-- [RediSearch]({{< relref "/rs/developing/modules/redisearch.md" >}})
-  - This module turns RS into a supercharged distributed in-memory
-    full-text indexing and search beast.
-- [ReJSON]({{< relref "/rs/developing/modules/rejson.md" >}})
-  - Now you have the convenience JSON as a built-in data type and
-    easily able to address nested data via a path.
-- [ReBloom]({{< relref "/rs/developing/modules/bloom-filters.md" >}})
-  - Enables RS to have a scalable bloom filter as a data type. Bloom
-    filters are probabilistic data structures that do a very good job at
-    quickly determining if something is contained within a set.
+- [RediSearch]({{< relref "/modules/redisearch/_index.md" >}})
+    - This module turns RS into a supercharged distributed in-memory
+      full-text indexing and search beast.
+- [ReJSON]({{< relref "/modules/redisjson/_index.md" >}})
+    - Now you have the convenience JSON as a built-in data type and
+      easily able to address nested data via a path.
+- [RedisBloom]({{< relref "/modules/redisbloom/_index.md" >}})
+    - Enables RS to have a scalable bloom filter as a data type. Bloom
+      filters are probabilistic data structures that do a very good job at
+      quickly determining if something is contained within a set.
 
 #### Custom Modules
 
 In addition, Redis Enterprise Pack provides the ability to load and use
-custom modules from [redismodules.com](http://redismodules.com/) or of
+custom [Redis modules](https://redislabs.com/community/redis-modules-hub/) or of
 your own creation.
 
-## Support for Docker in Production
+## Support for Docker
 
-Deploying and running your Redis Enterprise Pack cluster on Docker
-containers is now officially supported in production systems and
+Deploying and running your Redis Enterprise Software cluster on Docker
+containers is supported in development systems and
 available to pull from Docker hub. With the official image, you can
-easily and quickly deploy several containers to start running a scalable
-and highly available cluster Redis Enterprise Pack is famous for.
+easily and quickly test several containers to build the scalable
+and highly available cluster Redis Enterprise Software is famous for.
 
 For more information, go to [quick start with Redis Enterprise Pack on
 Docker.]({{< relref "/rs/getting-started/docker/_index.md" >}})
@@ -97,7 +98,7 @@ accounts can be used for administering resources on the cluster via
 command line, Rest API, or Web UI.
 
 For more information see [LDAP
-Integration]({{< relref "/rs/administering/security/ldap-integration.md" >}}).
+Integration]({{< relref "/rs/administering/designing-production/security/ldap-integration.md" >}}).
 
 ## Additional Capabilities
 
@@ -117,7 +118,7 @@ Support for additional Redis commands and features:
 
 ## Important Fixes
 
-**5.0.0-31**
+### 5.0.0-31 {#5-0-031}
 
 - RP9299 - Issue with reliability of metric ingress
 - RP9680 - Redis Enterprise Pack starting before /etc/rc.local script

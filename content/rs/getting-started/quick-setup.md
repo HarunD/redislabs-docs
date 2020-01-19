@@ -1,148 +1,149 @@
 ---
 Title: Quick Setup of Redis Enterprise Software (RS)
-description: 
+description:
 weight: 10
 alwaysopen: false
+categories: ["RS"]
 ---
+In this quick setup guide, we take you through the steps to install RS in a Linux environment to test its capabilities. To run RS in a Docker container for development or testing purposes, go to the
+[Docker Quick Start Guide]({{< relref "/rs/getting-started/docker/getting-started-docker.md" >}}).
+
 The steps to set up a Redis Enterprise Software (RS) cluster with a
 single node are super simple and go as follows:
 
 - Step 1: Install Redis Enterprise Software
-- Step 2: Setup a Redis Enterprise Software cluster
+- Step 2: Set up a Redis Enterprise Software cluster
 - Step 3: Create a new Redis database
 - Step 4: Connect to your Redis database
 
-"Quick Setup" steps on this page apply to a Linux based system install.
-If you would instead like to use Docker, there are platform-specific
-instructions for
-[Linux]({{< relref "/rs/getting-started/docker/linux.md" >}}),
-[Windows]({{< relref "/rs/getting-started/docker/windows.md" >}}),
-and
-[MacOS]({{< relref "/rs/getting-started/docker/macos.md" >}}).
-
-If you are looking for more detailed installation instructions you can
-visit the [installing and
-upgrading]({{< relref "/rs/administering/installing-upgrading/_index.md" >}})
-section of the technical documentation.
-
-## Step 1 - Install Redis Enterprise Software
+## Step 1: Install Redis Enterprise Software
 
 You can download the binaries from the [Redis Enterprise Software
 download
-site](https://app.redislabs.com/#/sign-up/software?direct=true). Once
-you have the bits on a Linux based OS, you need to untar the image
+site](https://app.redislabs.com/#/sign-up/software?direct=true) and copy the download package to machine with a Linux-based OS. To untar the image:
 
 ```src
 $ tar vxf <downloaded tar file name>
 ```
 
-Once the tar command completes, you will find a new install.sh script in
+Once the tar command completes, install RS with the install.sh script in
 the current directory.
 
 ```src
-$ sudo ./install.sh -y
+sudo ./install.sh -y
 ```
 
-## Step 2 - Setup a Cluster
+{{% note %}}When port 53 is in use, the installation fails. This is known to happen in
+default Ubuntu 18.04 installations in which systemd-resolved (DNS server) is running.
+To workaround this issue, change the system configuration to make this port available
+before running RS installation.
 
-Direct your browser to https://localhost:8443/ on the host machine to
-see the Redis Enterprise Software web console. Simply click the
-"**Setup**" button to get started.
+{{% expand "Example steps to resolve the port 53 conflict:" %}}
 
-Note: Depending on your browser, you may see a certificate error. Simply
-choose "continue to the website" to get to the setup screen.
+1. Run: `sudo vi /etc/systemd/resolved.conf`
+1. Add `DNSStubListener=no` as the last line in the file and save the file.
+1. Run: `sudo mv /etc/resolv.conf /etc/resolv.conf.orig`
+1. Run: `sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf`
+1. Run: `sudo service systemd-resolved restart`
+{{% /expand %}}
+{{% /note %}}
 
-![setup_linux](/images/rs/setup_linux.png?width=600&height=287)
+<!-- Also in getting-started-docker.md -->
+## Step 2: Set up a Cluster
 
-On the "**node configuration**" page, select your default settings and
-provide a cluster FQDN: "**cluster.local**". Then simply click the
-"**Next**" button.
+1. In the web browser on the host machine, go to https://localhost:8443 to see
+the Redis Enterprise Software web console.
 
-![RP-SetupScreen2](/images/rs/RP-SetupScreen2.jpeg?width=600&height=378)
+    Note:
 
-If you don't have a license key yet, click the "**Next"** button to try
-the trial version of the product.\
-On the next screen, set up a Cluster Administrator account using an
-email for the login and a password.
+    - Depending on your browser, you may see a certificate error. You can safely
+    continue to the web console.
+    - If you see an error from nginx, try again after a few minutes.
 
-![RP-SetupScreen4](/images/rs/RP-SetupScreen4.jpeg?width=600&height=377)
+1. Click **Setup** to start the node configuration steps.
 
-## Step 3 - Create a Database
+    ![Redis Enterprise Software Setup](/images/rs/getstarted-setup.png?width=600)
 
-Choose the "new redis db" option.
+1. In the **Node Configuration** settings, enter a cluster FQDN such as `cluster.local`.
+Then click **Next** button.
 
-![RP-SetupScreen5](/images/rs/RP-SetupScreen5.jpeg?width=600&height=375)
+    ![Redis Enterprise Software node configuration](/images/rs/getstarted-nodeconfig.png?width=600)
 
-On the "**new redis db**" page, click the "**show advanced option**"
-link and enter "**database1**" for a database name and "**12000**" for
-the endpoint port number. Then click "**Activate**" to create your
-database.
+1. Enter your license key, if you have one. If not, click the **Next** button to use the trial version.
 
-![RP-DBScreen2](/images/rs/RP-DBScreen2.jpeg?width=600&height=378)
+1. Enter an email and password for the admin account for the web console.
+
+    ![Redis Enterprise Software admin credentials](/images/rs/getstarted-admincredentials.png?width=600)
+
+1. Click **OK** to confirm that you are aware of the replacement of the HTTPS SSL/TLS
+certificate on the node, and proceed through the browser warning.
+
+## Step 3: Create a Database
+
+1. Select "redis database" and the "single region" deployment, and click Next.
+
+    ![Redis Enterprise Software create database](/images/rs/getstarted-newdatabase.png)
+
+1. Enter a database name such as `database1` and click **Activate** to create your database.
+
+    ![Redis Enterprise Software configure new database
+screen](/images/rs/getstarted-createdatabase.png)
 
 You now have a Redis database!
 
-## Step 4 - Connect to your Database
+## Step 4: Connect to your Database
 
-With the Redis database created, you are ready to connect to your
-database to store data. You can use one of the following ways to test
-connectivity to your database:
+After you create the Redis database, you are ready to store data in your
+database. You can test connectivity to your database with:
 
-- Connecting with redis-cli, the built-in command-line tool
-- Connecting with a _Hello World_ application using Python.
+- redis-cli - the built-in command-line tool
+- A _Hello World_ application using Python
 
-### Connecting Using redis-cli
+### Connecting Using redis-cli {#connecting-using-rediscli}
 
-Run redis-cli, located in the /opt/redislabs/bin directory, to connect
+redis-cli is a simple command-line tool to interact with Redis database.
+
+Run redis-cli, located in the /opt/redislabs/bin directory, to connect
 to port 12000 and store and retrieve a key in database1
 
 ```src
-# sudo /opt/redislabs/bin/redis-cli -p 12000
+$ sudo /opt/redislabs/bin/redis-cli -p 12000
 127.0.0.1:16653> set key1 123
 OK
 127.0.0.1:16653> get key1
 "123"
 ```
 
-### Connect with a simple Python app
+### Connecting Using _Hello World_ Application in Python
 
-A simple python application running in the host machine can also connect
-to the database1.
+A simple python application running on the **host machine**, not the
+container, can also connect to database1.
 
-Note: The following section assumes you already have python and redis-py
+Note: The following section assumes you already have Python and redis-py
 (python library for connecting to Redis) configured on the host machine
 running the container. You can find the instructions to configure
 redis-py on the [github page for
 redis-py](https://github.com/andymccurdy/redis-py).
 
-In the command-line Terminal, create a new file called
-"**redis_test.py**"
+1. Create a new file called `redis_test.py` with this contents:
 
-```src
-$ vi redis_test.py
-```
+    ```python
+    import redis
 
-Paste the following into a file named "**redis_test.py**".
+    r = redis.StrictRedis(host='localhost', port=12000, db=0)
+    print ("set key1 123")
+    print (r.set('key1', '123'))
+    print ("get key1")
+    print(r.get('key1'))
+    ```
 
-```src
-import redis
+1. Run the redis_test.py application to store and retrieve a key:
 
-r = redis.StrictRedis(host='localhost', port=12000, db=0)
-print ("set key1 123")
-print (r.set('key1', '123'))
-print ("get key1")
-print(r.get('key1'))
-```
+    ```src
+    python.exe redis_test.py
+    ```
 
-Run "redis_test.py" application to connect to the database and store
-and retrieve a key using the command-line.
-
-```src
-$ python redis_test.py
-```
-
-The output should look like the following screen if the connection is
-successful.
+If the connection is successful, the output of the application looks like this:
 
 ```src
 set key1 123
@@ -151,8 +152,9 @@ get key1
 b'123'
 ```
 
-Now that you have a database, if you'd like to do a quick test against
-the database or add a bunch of data for cluster testing, the
-[memtier_benchmark Quick
-Start]({{< relref "/rs/getting-started/memtier-benchmark.md" >}})
-should help.
+## Next steps
+
+Now you have a Redis Enterprise cluster ready to go. You can connect to it with
+a [redis client](https://redis.io/clients) to start loading it with data or
+you can use the [memtier_benchmark Quick Start]({{< relref "/rs/getting-started/memtier-benchmark.md" >}})
+to check the cluster performance.

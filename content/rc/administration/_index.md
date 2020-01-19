@@ -1,11 +1,13 @@
 ---
 Title: Administration
-description: 
-weight: 30
+description:
+weight: 50
 alwaysopen: false
+categories: ["RC"]
+aliases: /rv/administration/
 ---
-While there is very little configuration of Redis Enterprise Cloud
-required, there are some things that you can and may want to do to
-tailor a database to your use case.
+Redis Cloud manage most of the administration of your deployment automatically.
 
-{{%children style="h2" description="true"%}}
+You can manage these areas of your RC deployment:
+
+{{%allchildren style="h2" description="true"%}}

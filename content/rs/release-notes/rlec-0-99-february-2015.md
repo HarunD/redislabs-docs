@@ -1,25 +1,26 @@
 ---
 Title: RLEC 0.99.5-24 Release Notes (February 15, 2015)
-description: 
+description:
 weight: 99
 alwaysopen: false
+categories: ["RS"]
 ---
 If you are upgrading from a previous version, make sure to review the
 [upgrade
-instructions]({{< relref "/rs/administering/installing-upgrading/upgrading.md" >}})
+instructions]({{< relref "/rs/installing-upgrading/upgrading.md" >}})
 before running through the upgrade process.
 
 If you are upgrading from version 0.99.5-11:
 
 1. You must restart the services after the upgrade by running the
     following command with user root (sudo su). From the operating
-    system's CLI, run the following command:\
+    system's CLI, run the following command:
     cnm_ctl restart
 1. After the upgrade, rladmin status command will report that the
     databases are from an old version. It is recommended that you
     upgrade the databases as soon as possible, as described in the
     [upgrade
-    instructions]({{< relref "/rs/administering/installing-upgrading/upgrading.md" >}}).
+    instructions]({{< relref "/rs/installing-upgrading/upgrading.md" >}}).
 
 ## New features
 
@@ -41,7 +42,7 @@ None.
 - **Issue:** When taking a node offline or removing a node, if the
     node being taken offline or removed is currently serving as the web
     server for the web browser being used to view the management UI, the
-    management UI appears down while the node is down.\
+    management UI appears down while the node is down.
     **Workaround:** If you are using the cluster name in order to
     connect to the management UI in the browser, and the cluster name is
     registered in your external DNS or you are using the mDNS option,

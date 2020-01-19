@@ -1,40 +1,60 @@
 ---
-Title: Memory Mangement with Redis Enterprise Software (RES)
-description: 
+Title: Memory Management with Redis Enterprise Software (RS)
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
-By default, RES manages a node's memory so data is entirely in RAM for
-performance reasons. The exception to this is RES's [Redis on
-Flash]({{< relref "/rs/concepts/memory-architecture/redis-flash.md" >}})
-feature where Flash memory (SSDs) can be used to store data too. If
-there's not enough RAM available, RES does not allow inserting of more
-data into databases. This limitation is intentional and ultimately
-beneficial. It is detrimental to RES for the OS to take control of
-allocating memory and spill some data to the swap, thus managing memory
-on RES's behalf. RES has been designed to know better than the OS what
-it needs and when it needs it. RES protects the existing data and
-prevents the database from being able to store data into the shards. It
-can be configured to move the data to another node, or even discard it.
-This depends on [eviction
-policy]({{< relref "/rs/administering/database-operations/eviction-policy.md" >}})
-set on a database by the administrator.
+RS manages node memory so that data is entirely in RAM for improved database performance.
+RS is designed to handle memory management to optimize database performance - better than OS memory management.
+If not enough RAM is available, RS prevents adding more data into the databases.
 
-With this memory management style, comes the responsibility to monitor
-the nodes, clusters, databases, etc., but you are already doing that,
-right?
+RS protects the existing data and prevents the database from being able to store data into the shards.
+You can configure the cluster to move the data to another node, or even discard it according to the [eviction policy]
+({{< relref "/rs/administering/database-operations/eviction-policy.md" >}}) set on each database by the administrator.
+
+RoF [Redis on Flash]({{< relref "/rs/concepts/memory-architecture/redis-flash.md" >}})
+manages memory so that you can also use Flash memory (SSD) to store data.
 
 ## What happens when Redis Enterprise Software is low on RAM?
 
-If free RAM is low, RES will automatically attempt to migrate shards to
-other nodes, (if there are any) to free RAM on this node. If that is not
-possible, RES instructs shards to release memory (which can cause data
-loss if eviction policy allows it, or OOM replies). If shards cannot
-free memory, then RES depends on the OS's OOM killer to kill slaves (but
-tries to avoid killing masters).
+If a node is low on RAM, RS follows this order of priority:
 
-All that said, as always it is best practice to have a proper monitoring
-platform that will alert you proactively well before a system gets to
-this point. Maintaining a properly sized cluster is critical to a
-healthy RES installation and is a day to day responsibility like most
-databases.
+1. If there are other nodes available, RS migrates shards to other nodes.
+2. If the eviction policy allows eviction, RS causes shards to release memory,
+which can result in data loss.
+3. If the eviction policy does not allow eviction, RS sends
+out of memory (OOM) responses.
+4. If shards cannot free memory, RS relies on the OS processes to kill slaves,
+but tries to avoid killing masters.
+
+In addition to cluster memory management,
+we recommend that you have a monitoring platform that alerts you proactively before a system gets low on RAM.
+You must maintain sufficient free memory to make sure that you have a healthy RS installation.
+
+## Memory Statistics
+
+You can see the status of the cluster memory with these statistics:
+
+- Free_RAM - The amount of RAM that is available for system use out of the total RAM on the host.
+    Used Free_RAM includes RAM used by the operating system and other administrative processes.
+    Low Free_RAM can cause unexpected system behavior.
+
+    This statistic is shown:
+    - rladmin status - Cluster
+    - web UI metrics - Cluster
+- Provisional_RAM - The amount of RAM that is available for provisioning to databases out of the total RAM allocated for databases.
+    Used Provisional_RAM can include memory allocated for replication or other database features.
+
+    This statistic is shown in: rladmin status - Cluster
+- Used memory - The amount of memory currently used for data.
+
+    This statistic is shown in:
+    - rladmin status - Shards
+    - web UI metrics - Database
+- Memory limit - The maximum amount of memory that the database can use for data.
+
+    This statistic is shown in: web UI metrics - Database
+- Memory usage - The percent of used memory out of memory limit.
+
+    This statistic is shown in: web UI metrics - Database

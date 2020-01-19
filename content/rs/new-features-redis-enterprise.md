@@ -1,13 +1,14 @@
 ---
-Title: What's new in Redis Enterprise Software 5.0?
-description: 
+Title: What's new in Redis Enterprise Software 5.x?
+description:
 weight: 20
 alwaysopen: false
+categories: ["RS"]
 ---
 Below are detailed a few of the major features of this release of Redis
 Enterprise Software along with bug fixes and patches.
 
-## Geo-Distributed Active-Active Conflict-free Replicated Databases (CRDB)
+## Geo-Distributed Active-Active Conflict-free Replicated Databases (CRDB) {#geodistributed-activeactive-conflictfree-replicated-databases-crdb}
 
 Developing globally distributed applications can be challenging, as
 developers have to think about race conditions and complex combinations
@@ -33,32 +34,35 @@ Enterprise is known for.
 
 ### Redis Labs Modules
 
-There are three modules Redis Labs has developed and certified with
-Redis Enterprise Software (RS). The modules are:
+Redis Labs developed and certified these modules for use with Redis Enterprise Software (RS):
 
-- [RediSearch]({{< relref "/rs/developing/modules/redisearch.md" >}})
-  - This module turns RS into a supercharged distributed in-memory
-    full-text indexing and search beast.
-- [ReJSON]({{< relref "/rs/developing/modules/rejson.md" >}}) - Now
-    you have the convenience JSON as a built-in data type and easily
-    able to address nested data via a path.
-- [ReBloom]({{< relref "/rs/developing/modules/bloom-filters.md" >}})
-  - Enables RS to have a scalable bloom filter as a data type. Bloom
-    filters are probabilistic data structures that do a very good job at
-    quickly determining if something is contained within a set.
+- [RedisBloom]({{< relref "/modules/redisbloom/_index.md" >}})
+    - Enables RS to have a scalable bloom filter as a data type. Bloom
+      filters are probabilistic data structures that do a very good job at
+      quickly determining if something is contained within a set.
+- [RedisGraph](https://oss.redislabs.com/redisgraph/#quickstart)
+    - RedisGraph is the first queryable Property Graph database to use sparse
+      matrices to represent the adjacency matrix in graphs and linear algebra to query the graph.
+      RedisGraph uses [Cypher](https://www.opencypher.org/) as its query language.
+- [RedisJSON]({{< relref "/modules/redisjson/_index.md" >}})
+    - Now you have the convenience JSON as a built-in data type and easily
+      able to address nested data via a path.
+- [RediSearch]({{< relref "/modules/redisearch/_index.md" >}})
+    - This module turns RS into a supercharged distributed in-memory
+      full-text indexing and search beast.
 
 ### Custom Modules
 
 In addition, Redis Enterprise Software provides the ability to load and
-use custom modules from [redismodules.com](http://redismodules.com/) or
+use custom [Redis modules](https://redislabs.com/community/redis-modules-hub/) or
 of your own creation.
 
-## Support for Docker in Production
+## Support for Docker
 
 Deploying and running your Redis Enterprise Software cluster on Docker
-containers is now officially supported in production systems and
+containers is supported in development systems and
 available to pull from Docker hub. With the official image, you can
-easily and quickly deploy several containers to start running a scalable
+easily and quickly test several containers to build the scalable
 and highly available cluster Redis Enterprise Software is famous for.
 
 For more information go to [quick start with Redis Enterprise Software
@@ -73,4 +77,4 @@ accounts can be used for administering resources on the cluster via
 command line, Rest API, or Web UI.
 
 For more information see [LDAP
-Integration]({{< relref "/rs/administering/security/ldap-integration.md" >}}).
+Integration]({{< relref "/rs/administering/designing-production/security/ldap-integration.md" >}}).

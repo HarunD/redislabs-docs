@@ -1,8 +1,9 @@
 ---
 Title: Disk Sizing for Heavy Write Scenarios
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 In extreme write scenarios, when AOF is enabled, the AOF rewrite process
 may require considerably more disk space for database persistence.
@@ -14,9 +15,8 @@ formula described below.
 write scenarios, assuming identical shard sizes:**
 
 **X (1 + 3Y +Y²)**
-
-      where:\
-**X** = each shard size\
+      where:
+**X** = each shard size
 **Y** = number of shards
 
 Following are examples of database configurations and the persistence
@@ -30,6 +30,6 @@ disk space they would require in this scenario:
 | Required disk space (GB) | 73 | 191 | 328 | 723 |
 
 For disk size requirements in standard usage scenarios, refer to the
-[Hardware 
+[Hardware
 requirements]({{< relref "/rs/administering/designing-production/hardware-requirements.md" >}})
 section.

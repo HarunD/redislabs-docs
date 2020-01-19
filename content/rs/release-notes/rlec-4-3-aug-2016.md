@@ -1,12 +1,13 @@
 ---
 Title: RLEC 4.3.0-230 Release Notes (August 2, 2016)
-description: 
+description:
 weight: 96
 alwaysopen: false
+categories: ["RS"]
 ---
 If you are upgrading from a previous version, make sure to review the
 [upgrade
-instructions]({{< relref "/rs/administering/installing-upgrading/upgrading.md" >}})
+instructions]({{< relref "/rs/installing-upgrading/upgrading.md" >}})
 before running through the upgrade process.
 
 You can upgrade to this version from any 4.2 version. If you have a
@@ -26,7 +27,7 @@ upgrade to this version.
     when you upgrade the databases they will be updated to this version.
     If you would like to change the default version to Redis 2.8 refer
     to the instruction in the [Upgrading
-    databases]({{< relref "/rs/administering/installing-upgrading/upgrading.md" >}})
+    databases]({{< relref "/rs/installing-upgrading/upgrading.md" >}})
     section. If you would like to upgrade existing databases to the
     latest 2.8 minor version, refer to the Known Issues section below.
 - Complete cluster failure recovery instructions added. For additional
@@ -43,14 +44,14 @@ upgrade to this version.
 - rlcheck installation verification utility added to facilitate
     checking node health. For additional details, refer to [rlcheck
     Installation Verification
-    Utility]({{< relref "/rs/references/cli-reference/rlcheck.md" >}}).
+    Utility]({{< relref "/rs/references/rlcheck.md" >}}).
 - Added the ability to allow the user to configure how machine IP
     addresses are used in Node Configuration setup in the management UI.
     For additional details, refer to [Initial setup - creating a new
     cluster.]({{< relref "/rs/administering/cluster-operations/new-cluster-setup.md" >}})
 - Connection to database endpoint can now be encrypted with SSL. For
     additional details, refer to [Securing client connection with
-    SSL]({{< relref "/rs/administering/security/client-connections.md" >}}).
+    SSL]({{< relref "/rs/administering/designing-production/security/client-connections.md" >}}).
 - Added support for running the cluster on the following operating
     systems and versions: RHEL/CentOS 6.6, 7.1, 7.2, RHEL 6.7, Oracle
     Linux 6.5.

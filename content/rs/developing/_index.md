@@ -1,7 +1,8 @@
 ---
 Title: Developing for Redis Enterprise
-description: 
-weight: 50
+description:
+weight: 60
 alwaysopen: false
+categories: ["RS"]
 ---
-{{%children style="h2" description="true"%}}
+{{%allchildren style="h2" description="true"%}}

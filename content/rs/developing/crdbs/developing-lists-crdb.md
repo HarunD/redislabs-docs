@@ -1,8 +1,9 @@
 ---
 Title: Developing with Lists in a CRDB
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 Redis Lists are simply lists of strings, sorted by insertion order. It
 is possible to add elements to a Redis List that push new elements to
@@ -14,8 +15,6 @@ example).
 Lists in CRDBs are just the same as regular Redis Lists. Please see the
 following examples to get familiar with Lists' behavior in a
 CRDB.
-
- 
 
 Simple Lists
 example:
@@ -32,8 +31,6 @@ example:
 The final list contains both the "world" and "hello" elements, in that
 order (Instance 2 observed "hello" when it added
 "world").
-
- 
 
 Example of Lists with Concurrent
 Insertions:
@@ -54,8 +51,6 @@ element y2 after x. The final List contains all three elements: x is the
 first element, after it y1 and then y2, since Instance 2 performed the
 LINSERT operation at time t4\>t3.
 
- 
-
 Example of Deleting a List while Pushing a New
 Element:
 
@@ -72,8 +67,6 @@ Element:
 At t4 - t6, DEL deletes only observed elements. This is why L still
 contains y.
 
- 
-
 Example of Popping Elements from a
 List:
 
@@ -88,8 +81,8 @@ List:
 |  t7 | RPOP L => z | RPOP L => z |
 
 **Explanation**:
-At t1, the operation pushes elements x, y, z to List L. At3, the
-sequential pops behaves as expected from a queue. At 7, the concurrent
+At t1, the operation pushes elements x, y, z to List L. At t3, the
+sequential pops behave as expected from a queue. At t7, the concurrent
 pop in both instances might show the same result. The instance was not
 able to sync regarding the z removal so, from the point of view of each
 instance, z is located in the List and can be popped. After syncing,
@@ -99,12 +92,12 @@ Be aware of the behavior of Lists in CRDBs when using List as a stack
 or queue. As seen in the above example, two parallel RPOP operations
 performed by two different CRDB instances can get the same element in
 the case of a concurrent operation. Lists in CRDBs guarantee that each
-element will be POP-ed at least once, but cannot guarantee that each
-element will be POP-ed only once. Such behavior should be taken into
+element is POP-ed at least once, but cannot guarantee that each
+element is POP-ed only once. Such behavior should be taken into
 account when, for example, using Lists in CRDBs as building blocks for
 inter-process communication systems.
 
 In that case, if the same element cannot be handled twice by the
-application(s), it's recommended that the POP operations be performed by
+applications, it's recommended that the POP operations be performed by
 one CRDB instance, whereas the PUSH operations can be performed by
 multiple CRDB instances.

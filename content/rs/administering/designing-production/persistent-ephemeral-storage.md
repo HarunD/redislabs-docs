@@ -1,8 +1,9 @@
 ---
 Title: Persistent and ephemeral storage
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 For each node in the cluster, you can configure both a persistent
 storage and an ephemeral storage path.

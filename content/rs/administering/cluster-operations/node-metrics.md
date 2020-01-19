@@ -1,8 +1,9 @@
 ---
 Title: Viewing node metrics
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 On the **Node \> Metrics** page you can view detailed graphs of various
 node metrics in real-time.

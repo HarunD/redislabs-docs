@@ -1,8 +1,9 @@
 ---
 Title: Private and Public Endpoints on Redis Enterprise Software (RS)
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 The cluster can be configured to support both private and public IPs to
 connect to database endpoints through both public and private networks.
@@ -30,23 +31,22 @@ To enable this configuration you need to:
     traffic in the node configuration so it can be used for private
     database endpoints.
 
-Once this configuration is in place, both sets of endpoints will be
+Once this configuration is in place, both sets of endpoints are
 available for the databases in the cluster.
 
 ## Modifying an Existing Cluster
 
-If your cluster is on RS 4.4 or above, you can enable it by using the
-***rladmin suffix add*** command.
+You can enable it by using the ***rladmin suffix add*** command.
 
 To add an internal FQDN/IP to a cluster:
 
 ```src
-$ rladmin suffix add name <node1.internal.clustername.domain.com> internal
+rladmin suffix add name <node1.internal.clustername.domain.com> internal
 ```
 
 To add an internal FQDN/IP to a cluster, but signal to the cluster there
 is slave for DNS:
 
 ```src
-$ rladmin suffix add name <node2.internal.clustername.domain.com> internal slave 10.0.1.1
+rladmin suffix add name <node2.internal.clustername.domain.com> internal slave 10.0.1.1
 ```

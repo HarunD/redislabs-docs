@@ -1,37 +1,24 @@
 ---
 title: Securing Connections with SSL/TLS
-description: 
+description:
 weight: 25
 alwaysopen: false
+categories: ["RC"]
+aliases: /rv/securing-redis-cloud-connections/
 ---
-To configure your subscription so you can use SSL/TLS with your Redis
-Enterprise Cloud (RC) database, please contact support. To speed up this
-process, provide the agent with the Account ID and subscription number
-where you desire SSL service.
-
-**Note:** Be aware that you will incur additional monthly costs by
-enabling SSL.
-
-To find your account number, go to the "Settings" page in the Web UI and
-look for "Account Number":
-
-![account_number](/images/rc/account_number.png?width=600&height=265)
-
-For your subscription number, please go to the "Subscriptions" page of
-the Web UI and look in the title.
-
-![subscriptions2](/images/rc/subscriptions2.png?width=600&height=248)
+In Redis Cloud, SSL/TLS support is a paid option. To enable it, contact [Support](https://support.redislabs.com).
+SSL/TLS support is included in all Redis Cloud Pro paid plans.
 
 ## Setting Up Your Database
 
-Using SSL/TLS requires setup of both your Redis Enterprise Cloud
+Using SSL/TLS requires setup of both your Redis Cloud
 database and your application, as described below.
 
-1. Login to your account and navigate to the "**Database**" page in the
+1. Login to your account and navigate to the **Database** page in the
     top right menu.
-1. Select the database you wish to connect to and click the "**Edit**"
+1. Select the database you want to connect to and click the **Edit**
     button.
-1. Under the "**Access Control & Security" **section, make sure **SSL
+1. Under the **Access Control & Security** section, make sure **SSL
     Client Authentication** is selected.
 1. Set the resource's client certificate using one of the following
     ways.
@@ -44,26 +31,26 @@ database and your application, as described below.
     1. Generate a Certificate:
         1. Use the **Generate Client Certificate** button to generate a
             client certificate.
-        1. The generated certificate's public key will be displayed in
+        1. The generated certificate's public key is shown in
             the textbox.
-        1. This will also trigger an automatic download of a zip
+        1. This also triggers an automatic download of a zip
             archive with the following contents:
-            1. `garantia_user.crt` - the certificate's public key.
-            1. `garantia_user_private.key` - the certificate's private
+            1. `redislabs_user.crt` - the certificate's public key.
+            1. `redislabs_user_private.key` - the certificate's private
                 key.
-            1. `garantia_ca.pem` - the service's certification
+            1. `redislabs_ca.pem` - the service's certification
                 authority.
 1. Click the **Update** button to apply the changes to your resource.
 
 **Important**: Once SSL is
-enabled, your database will no longer accept regular, non-SSL
+enabled, your database no longer accepts regular, non-SSL
 connections.
 
-## Setting up your application if you are not using an SSL/TLS enabled client library
+## Setting up your application if you are not using an SSL/TLS enabled client library {#setting-up-your-application-if-you-are-not-using-an-ssltls-enabled-client-library}
 
 This procedure describes the steps required to install and configure
 [stunnel](https://stunnel.org), an open-source secure proxy, to connect
-to an SSL-enabled Redis^e^ Cloud database.
+to an SSL-enabled Redis Cloud database.
 
 Important: This procedure is only required if you are **NOT** using an
 SSL/TLS enabled Redis client.
@@ -73,26 +60,25 @@ section below that's relevant to your client's OS. Once done, configure
 your client to connect to stunnel (i.e. 127.0.0.1:6379 in the examples
 below) instead of your resource's endpoint.
 
-## OS-Specific Instructions for Setting Up stunnel
+## OS-Specific Instructions for Setting Up stunnel {#osspecific-instructions-for-setting-up-stunnel}
 
 ### Ubuntu 12.04
 
 1. Install stunnel:
 
     ```src
-    $ apt-get install stunnel
+    apt-get install stunnel
     ```
 
 1. Copy all certificate files to /etc/stunnel.
-    1. `garantia_user.crt` - the certificate's public key.
-    1. `garantia_user_private.key` - the certificate's private key.
-    1. `garantia_ca.pem` - the service's certification authority.
+    1. `redislabs_user.crt` - the certificate's public key.
+    1. `redislabs_user_private.key` - the certificate's private key.
+    1. `redislabs_ca.pem` - the service's certification authority.
 1. Change the permissions of the private key:
 
     ```src
-    $ chown root:root /etc/stunnel/garantia_user_private.key
-
-    $ chmod 0600 /etc/stunnel/garantia_user_private.key
+    $ chown root:root /etc/stunnel/redislabs_user_private.key
+    $ chmod 0600 /etc/stunnel/redislabs_user_private.key
     ```
 
 1. Create a configuration file named /etc/stunnel/redislabs.conf as
@@ -104,7 +90,7 @@ below) instead of your resource's endpoint.
 1. Start the stunnel service:
 
     ```src
-    $ service stunnel4 start
+    service stunnel4 start
     ```
 
 ### CentOS 6.5
@@ -112,19 +98,18 @@ below) instead of your resource's endpoint.
 1. Install stunnel:
 
     ```src
-    $ yum install stunnel
+    yum install stunnel
     ```
 
 1. Copy all certificate files to `/etc/stunnel`.
-    1. `garantia_user.crt` - the certificate's public key.
-    1. `garantia_user_private.key` - the certificate's private key.
-    1. `garantia_ca.pem` - the service's certification authority.
+    1. `redislabs_user.crt` - the certificate's public key.
+    1. `redislabs_user_private.key` - the certificate's private key.
+    1. `redislabs_ca.pem` - the service's certification authority.
 1. Change the permissions of the private key:
 
     ```src
-    $ chown root:root /etc/stunnel/garantia_user_private.key
-
-    $ chmod 0600 /etc/stunnel/garantia_user_private.key
+    $ chown root:root /etc/stunnel/redislabs_user_private.key
+    $ chmod 0600 /etc/stunnel/redislabs_user_private.key
     ```
 
 1. Create a configuration file named /etc/stunnel/stunnel.conf as shown
@@ -192,7 +177,7 @@ below) instead of your resource's endpoint.
 
     }
 
-    
+
 
     stop() {
 
@@ -218,7 +203,7 @@ below) instead of your resource's endpoint.
 
     }
 
-    
+
 
     case "$1" in
 
@@ -272,13 +257,9 @@ below) instead of your resource's endpoint.
 
     ```src
     $ chown root:root /etc/init.d/stunnel
-
     $ chmod 0755 /etc/init.d/stunnel
-
     $ chkconfig --add /etc/init.d/stunnel
-
     $ stunnel /etc/stunnel/redislabs.conf
-
     $ service stunnel start
     ```
 
@@ -288,15 +269,21 @@ Use the following stunnel configuration file to have your client open
 secure connections to your Redis Labs resources via port 6379 of your
 localhost:
 
-`cert = /etc/stunnel/garantia_user.crt key = /etc/stunnel/garantia_user_private.key cafile = /etc/stunnel/garantia_ca.pem verify = 2 delay = yes`
+`cert = /etc/stunnel/redislabs_user.crt
+key = /etc/stunnel/redislabs_user_private.key
+cafile = /etc/stunnel/redislabs_ca.pem
+verify = 2
+delay = yes`
 
-`[redislabs] client = yes accept = 127.0.0.1:6379 connect = host:port`
+`[redislabs] client = yes
+accept = 127.0.0.1:6379
+connect = host:port`
 
-### Testing Secure Connectivity to a Redis Enterprise Cloud Resource
+### Testing Secure Connectivity to a Redis Cloud Resource
 
 You can test the connection from your client using redis-cli, for
 example::
 
 ```src
-$ redis-cli -h <hostname> -p <portnumber> PING
+redis-cli -h <hostname> -p <portnumber> PING
 ```

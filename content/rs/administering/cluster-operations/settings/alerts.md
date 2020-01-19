@@ -1,8 +1,9 @@
 ---
 Title: Managing Cluster Alerts in Redis Enterprise Software (RS)
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 The **Settings \> Alerts** allows you to designate which cluster-level
 events trigger alert notifications.
@@ -21,10 +22,15 @@ Status** fields, in the **Log **page, and can also be sent via email.
 To enable receiving email alerts:
 
 1. Select the checkbox at the bottom of the Alerts page.
-1. Add the relevant users to the Team page, and ensure that the
+1. Add the relevant users to the Team page, and make sure that the
     checkbox Email Alerts is selected (for additional details, refer to
     [Managing
-    users]({{< relref "/rs/administering/security/account-management.md" >}}).
+    users]({{< relref "/rs/administering/designing-production/security/account-management.md" >}}).
 1. Configure the email server settings on the General page (for
     additional details, refer to [Managing general
     settings]({{< relref "/rs/administering/cluster-operations/settings/_index.md" >}}).
+
+{{% note %}}
+If you enable alerts for "Node joined" or "Node removed" actions,
+you must also enable "Receive email alerts" so that the alerts are sent.
+{{% /note %}}

@@ -1,47 +1,35 @@
 ---
 Title: Database clustering
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
-[Redis](https://redislabs.com/redis-features/redis) is (mostly) a
-single-threaded process. This is a design decision that allows it to be
-extremely performant while keeping its implementation simple. However,
-the downside of that architectural choice is that Redis cannot be easily
-scaled. A single Redis process is ultimately bound by the CPU core on
-which it is running, as well as the amount of memory the server has.
+Open source [Redis](https://redislabs.com/redis-features/redis) is a single-threaded process
+to provide speed and simplicity.
+A single Redis process is bound by the CPU core that it is running on and available memory on the server.
 
-To overcome these limitations, Redis Enterprise Software (RS) supports
-database clustering. A database cluster is a set of Redis processes, in
-which each process manages a subset of the database's keyspace. This
-allows you to overcome scaling challenges through horizontal scaling by
-using the RAM resources of multiple cores and multiple servers.
+Redis Enterprise Software (RS) supports database clustering to allow customers
+to spread the load of a Redis process over multiple cores and the RAM of multiple servers.
+A database cluster is a set of Redis processes where each process manages a subset of the database keyspace.
 
-In a Redis database cluster, the keyspace is partitioned into hash
-slots. At any given time a slot resides on and is managed by, a single
-node. Each node that belongs to a Redis database cluster can manage
-multiple slots. This division of the key space, a.k.a. sharding, is
-achieved by hashing the keys' names, or parts of these (key hash tags),
-to obtain the slot where a key should reside.
+In an RS cluster, the keyspace is partitioned into database shards.
+At any moment a shard resides on a single node and is managed by that node.
+Each node in a Redis database cluster can manage multiple shards.
+The key space in the shards is divided into hash slots.
+The slot of a key is determined by a hash of the key name or part of the key name.
 
-Despite running multiple Redis processes, database clustering is nearly
-transparent to the application using it. The database cluster is
-accessible through a single endpoint that automatically routes all
-operations to the relevant shards, without requiring a cluster-aware
-Redis client. This allows applications to benefit from using the
-database clustering without performing any code changes, even if they
-were not designed beforehand to use it.
+Database clustering is transparent to the Redis client that connects to the database.
+The Redis client accesses the database through a single endpoint that automatically routes all operations to the relevant shards.
+You can connect an application to a single Redis process or a clustered database without any difference in the application logic.
 
-## Abbreviations
+## Terminology
 
-Tag / Hash Tag
-A part of the key that is used in the hash calculation.
+In clustering, these terms are commonly used:
 
-Slot / Hash Slot
-The result of the hash calculation.
-
-Shard
-Redis process that is part of the Redis clustered database.
+- Tag or Hash Tag - A part of the key that is used in the hash calculation.
+- Slot or Hash Slot - The result of the hash calculation.
+- Shard - Redis process that is part of the Redis clustered database.
 
 ## When to use sharding
 
@@ -67,9 +55,9 @@ been set, you cannot disable database clustering or reduce the number of
 shards. You can only increase the number of shards by a multiple of the
 current number of shards. For example, if the current number of shards
 was 3, you can increase to 6, 9, 12 and so on. An exception to this is a
-RediSearch Enterprise enabled database. Once you configure the number of
+RediSearch enabled database. Once you configure the number of
 shards, you can no longer change that value. If you need to scale your
-RediSearch Enterprise enabled database, you must create a new database
+RediSearch enabled database, you must create a new database
 at the new required size and replicate the current database to the new
 one.
 
@@ -106,9 +94,9 @@ Expressions (PCRE) rules that describe the dataset's key name patterns.
 
 To configure a custom hashing policy, enter the regular expression
 (RegEx) rules that identify the substring in the key's name - hash tag
--- on which hashing will be done. The hashing tag is denoted in the
+-- on which hashing is done. The hashing tag is denoted in the
 RegEx by the use of the \`tag\` named subpattern. Different keys that
-have the same hash tag will be stored and managed in the same slot.
+have the same hash tag is stored and managed in the same slot.
 
 Once you enable the custom hashing policy, the following default RegEx
 rules are implemented. Update these rules to fit your specific logic:
@@ -127,12 +115,12 @@ their order to suit your application's requirements.
 2. RegEx rules are evaluated in their order and the first rule matched
     is used. Therefore, strive to place common key name patterns at the
     beginning of the rule list.
-3. Key names that do not match any of the RegEx rules will trigger an
+3. Key names that do not match any of the RegEx rules trigger an
     error.
 4. The '.\*(?\<tag\>)' RegEx rule forces keys into a single slot
-    because the hash key will always be empty. Therefore, when used,
+    because the hash key are always empty. Therefore, when used,
     this should be the last, catch-all rule.
-5. The following flag is enabled in the regular expression parser:\
+5. The following flag is enabled in the regular expression parser:
     PCRE_ANCHORED: the pattern is constrained to match only at the
     start of the string being searched.
 
@@ -154,37 +142,33 @@ Examples of such changes include:
 or require flushing the database, is to back up the database and import
 the data to a newly configured database.
 
-## Multi-Key operations
+## Multi-Key operations {#multikey-operations}
 
 Operations on multiple keys in a clustered database are supported with
 the following limitations:
 
 - **Multi-key commands**: Redis offers several commands that accept
     multiple keys as arguments. In a clustered database, most multi-key
-    commands are not allowed across tags. The following multi-key
-    commands **are allowed** across tags: DEL, MSET, MGET, KEYS, HMGET,
-    HMSET, FLUSHALL, EXISTS.
+    commands are not allowed across slots. The following multi-key
+    commands **are allowed** across slots: DEL, MSET, MGET, EXISTS, UNLINK, TOUCH
+
+    Commands that affect all keys or keys that match a specified pattern are allowed
+    in a clustered database, for example: FLUSHDB, FLUSHALL, KEYS
 
     **Note**: When using these commands in a sharded setup, the command
     is distributed across multiple shards and the responses from all
     shards are combined into a single response.
 
-    All other multi-key commands are **not allowed** across tags and if
-    used across tags will return an error.\
-    Examples of such commands are: BITOP, BLPOP, BRPOP, BRPOPLPUSH,
-    MSETNX, RPOPLPUSH, SDIFF, SDIFFSTORE, SINTER, SINTERSTORE, SMOVE,
-    SORT, SUNION, ZINTERSTORE, ZUNIONSTORE.
-
 - **Geo commands**: In GEORADIUS/GEOREADIUSBYMEMBER commands, the
     STORE and STOREDIST option can only be used when all affected keys
     reside in the same slot.
 - **Transactions**: All operations within a WATCH / MULTI / EXEC block
-    should be performed on keys that have the same tag.
-- **Lua scripts**: All keys used by a Lua script must have the same
-    tag and must be provided as arguments to the EVAL / EVALSHA commands
+    should be performed on keys that are mapped to the same slot.
+- **Lua scripts**: All keys used by a Lua script must be mapped to the same
+    slot and must be provided as arguments to the EVAL / EVALSHA commands
     (as per the Redis specification). Using keys in a Lua script that
     were not provided as arguments might violate the sharding concept
-    but will not result in the proper violation error being returned.
+    but do not result in the proper violation error being returned.
 - **Renaming keys**: The use of the RENAME / RENAMENX commands is
     allowed only when the key's original and new values are mapped to
-    the same tag.
+    the same slot.

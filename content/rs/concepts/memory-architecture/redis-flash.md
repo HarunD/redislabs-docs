@@ -1,19 +1,20 @@
 ---
 Title: Redis on Flash
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 Redis on Flash (RoF) offers users of [Redis Enterprise
 Software]({{< relref "/rs/_index.md" >}}) and [Redis
-Enterprise VPC](/products/redis-cloud-private/) the unique ability to
+Enterprise VPC](https://redislabs.com/products/redis-cloud-private/) the unique ability to
 have very large Redis databases but at significant cost savings. Where
 standard Redis databases must all be in RAM, Redis on Flash enables your
 Redis databases to span both RAM and dedicated flash memory
 (SSD). Whilst keys are always stored in RAM, RoF intelligently manages
 the location of their values (RAM vs Flash) in the database via a
-LRU-based (least-recently-used) mechanism. Hot values will be in RAM,
-but infrequently used, or warm values, will be ejected to flash memory.
+LRU-based (least-recently-used) mechanism. Hot values are stored in RAM,
+but infrequently used, or warm values, are ejected to flash memory.
 This enables you to have much larger datasets with RAM-like latency and
 performance, but at dramatically lower cost than an all-RAM database.
 
@@ -72,8 +73,8 @@ all values in RAM.
 ## Working Set Management
 
 Of your dataset, perhaps there is a subset of highly active objects
-considered the application's "working set." Redis on Flash will
-intelligently manage the location of the working set (RAM) and the
+considered the application's "working set." Redis on Flash 
+intelligently manages the location of the working set (RAM) and the
 infrequently accessed keys (flash memory), based on LRU
 (least-recently-used) on a per-object basis.
 
@@ -86,7 +87,7 @@ Enterprise Software databases in characteristics and features.
 ## Redis on Flash vs Disk Based Databases
 
 Flash memory can be SATA or NVMe based storage devices, but NVMe is
-where you will see the performance benefits. There are many databases in
+where you can see the performance benefits. There are many databases in
 the industry that are disk based. Disk-based databases use RAM to cache
 part of the data for fast access. However, this approach is different
 than extending RAM in a number of ways.
@@ -130,7 +131,7 @@ prerequisites:
 - Have ephemeral and persistent flash memory mounted on Redis
     Enterprise Software nodes with the proper disk size, per the [Redis
     on Flash memory
-    guidelines]({{< relref "/rs/administering/designing-production/hardware-requirements.md#production-environment-reqs.md" >}}).
+    guidelines]({{< relref "/rs/administering/designing-production/hardware-requirements.md#production-environment-hardware-requirements" >}}).
 - Have all [hardware
     requirements]({{< relref "/rs/administering/designing-production/hardware-requirements.md" >}})
     in place.
@@ -138,7 +139,7 @@ prerequisites:
     requirements]({{< relref "/rs/administering/designing-production/supported-platforms.md" >}})
     in place.
 - Perform the [initial setup and creation of a new
-    cluster]({{< relref "/rs/administering/installing-upgrading/downloading-installing.md" >}}).
+    cluster]({{< relref "/rs/installing-upgrading/downloading-installing.md" >}}).
 
 Once these requirements are met, both Redis of Flash databases and
 all-RAM databases can be created and managed in the same cluster. For
@@ -146,5 +147,5 @@ additional details, refer to [Creating a new
 database]({{< relref "/rs/administering/database-operations/creating-database.md" >}}).
 
 When Redis on Flash is enabled, additional settings and
-[metrics](redis-enterprise-documentation/administering/monitoring-metrics/definitions/#redis-flash-metrics)
+[metrics]({{< relref "/rs/administering/monitoring-metrics/definitions.md#redis-on-flash-metrics" >}})
 are available in the system.

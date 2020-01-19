@@ -1,7 +1,9 @@
 ---
 Title: How Tos
-description: 
-weight: 40
+description:
+weight: 70
 alwaysopen: false
+categories: ["RC"]
+aliases: /rv/how-to/
 ---
-{{%children style="h2" description="true"%}}
+{{%allchildren style="h2" description="true"%}}

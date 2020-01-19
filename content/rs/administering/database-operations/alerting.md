@@ -1,11 +1,12 @@
 ---
 Title: Database alerting
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 In the *Alerts* section of the Redis Enterprise Software database page,
-you can designate which database events will trigger alert
+you can designate which database events trigger alert
 notifications.
 
 For instructions on configuring alerts at the cluster level, refer to
@@ -23,13 +24,10 @@ the **Log **page, and can also be sent by **email**.
 **To enable receiving email alerts**:
 
 1. Select the checkbox at the bottom of the section.
-1. Add the relevant users on the **Team** page, and ensure that the
+1. Add the relevant users on the **Team** page, and make sure that the
     checkbox Email Alerts is selected (for additional details, refer to
     [Account
-    Management]({{< relref "/rs/administering/security/account-management.md" >}}).
+    Management]({{< relref "/rs/administering/designing-production/security/account-management.md" >}}).
 1. Configure the email server settings on the **General** page (for
     additional details, refer to [general
-    settings]({{< relref "/rs/administering/cluster-operations/settings/_index.md" >}}).
-
-Note: if you enable alerts on "Node Joined" and/or "Node removed", you
-must also enable "Receive email alerts" to actually be alerted to these.
+    settings]({{< relref "/rs/administering/cluster-operations/settings/_index.md" >}})).

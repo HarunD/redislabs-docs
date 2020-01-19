@@ -1,8 +1,9 @@
 ---
 Title: Performance Optimization
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 Redis Enterprise Software (RS) employs various algorithms to optimize
 performance. As part of this process, RS examines usage characteristics
@@ -18,7 +19,7 @@ In addition, RS can be optimized for two different environments:
 - Local-network environment
 - Cloud environment
 
-Depending on which configuration you choose, RS will use different
+Depending on which configuration you choose, RS uses different
 thresholds to make operation related decisions.
 
 The default configuration is for local-network environments. If you are

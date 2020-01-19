@@ -1,8 +1,9 @@
 ---
 Title: Developing with Sets in a CRDB
-description: 
+description:
 weight: $weight
 alwaysopen: false
+categories: ["RS"]
 ---
 Redis Sets are an unordered collection of Strings. It is possible to
 add, remove, and test for the existence of members with Redis commands.
@@ -39,4 +40,3 @@ Here is an example of an "observed remove" case.
 |  t3 | SREM key1 “c” |  |
 |  t4 | — Sync — | — Sync — |
 |  t3 | SMEMBERS key1 “c” “b” | SMEMBERS key1 “c” “b” |
- 
