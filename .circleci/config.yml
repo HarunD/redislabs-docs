@@ -4,43 +4,47 @@ jobs:
     build-staging:
         docker:
             - image: cibuilds/hugo:0.48
-        working_directory: ~/project
+        # working_directory: ~/project
         steps:
             # Checkout the code from the branch into the working_directory
             - checkout
             # Set GitHub branch name in config.toml for the Improve this Page link
             - run:
-                name: Set "Edit in GitHub" link for the specified branch in the hugo config
-                command: sed -i s/branch/${CIRCLE_BRANCH}/g config.toml
+                  name: Set "Edit in GitHub" link for the specified branch in the hugo config
+                  command: sed -i s/branch/${CIRCLE_BRANCH}/g config.toml
+            # Set GitHub access token
+            - run:
+                  name: Set GitHub access token
+                  command: sed -i 's/foo/bar/g' test/a.js
             # Declare target location for baseURL and deployment location and build site
             # Improvement-> move the declaration to command and save to bash environment: echo 'export PATH=/path/to/foo/bin:$PATH' >> $BASH_ENV
             - run:
-                name: Build site files (HTML, CSS, images) with the baseURL for the specified branch
-                command: |
-                    if [ "${CIRCLE_BRANCH}" == "master" ] ;
-                        then export LOCATION=staging/dev
-                    else
-                        export LOCATION=staging/${CIRCLE_BRANCH} ;
-                    fi
-                    echo ${LOCATION}
-                    hugo -v --baseURL //docs.redislabs.com/$LOCATION
+                  name: Build site files (HTML, CSS, images) with the baseURL for the specified branch
+                  command: |
+                      if [ "${CIRCLE_BRANCH}" == "master" ] ;
+                          then export LOCATION=staging/dev
+                      else
+                          export LOCATION=staging/${CIRCLE_BRANCH} ;
+                      fi
+                      echo ${LOCATION}
+                      hugo -v --baseURL //docs.redislabs.com/$LOCATION
             - run:
-                name: Remove generated directories that are not needed
-                command: |
-                    cd public
-                    rm -rf embeds revealjs
+                  name: Remove generated directories that are not needed
+                  command: |
+                      cd public
+                      rm -rf embeds revealjs
             - persist_to_workspace:
-                root: .
-                paths:
-                    - public
+                  root: .
+                  paths:
+                      - public
 
 workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - build-staging:
-          filters:
-            branches:
-              ignore:
-                - /.*-build/
-                - latest      
+    version: 2
+    build-deploy:
+        jobs:
+            - build-staging:
+                  filters:
+                      branches:
+                          ignore:
+                              - /.*-build/
+                              - latest
