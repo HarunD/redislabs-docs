@@ -15,7 +15,7 @@ jobs:
             # Set GitHub access token
             - run:
                   name: Set GitHub access token
-                  command: sed -i 's/foo/bar/g' test/a.js
+                  command: sed -i 's/foo/$ACCESS_TOKEN/g' test/a.js
             # Declare target location for baseURL and deployment location and build site
             # Improvement-> move the declaration to command and save to bash environment: echo 'export PATH=/path/to/foo/bin:$PATH' >> $BASH_ENV
             - run:
@@ -33,6 +33,9 @@ jobs:
                   command: |
                       cd public
                       rm -rf embeds revealjs
+            - run:
+                name: Verify replacement
+                command: cat test/a.js
             - persist_to_workspace:
                   root: .
                   paths:
